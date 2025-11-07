@@ -1,5 +1,6 @@
 import useTaskStore from "../store/taskStore";
-import { format } from "date-fns";
+import getDueWarning from "../utils/getDueWarning.js";
+import getDueColor from "../utils/getDueColor.js";
 
 const TaskItem = ({ task }) => {
   const {
@@ -10,10 +11,13 @@ const TaskItem = ({ task }) => {
   } = useTaskStore();
 
   const warning = getDueWarning(task.dueDate);
-  const formattedDueDate = task.dueDate && format(task.dueDate, "dd-MM-yyyy");
 
   return (
-    <div className="bg-white hover:-translate-y-1 mb-4 rounded-lg p-5 shadow-md hover:shadow-lg transition-all border-l-4 border-yellow-500">
+    <div
+      className={`${getDueColor(
+        task
+      )} hover:-translate-y-1 mb-5 rounded-lg p-5 shadow-md hover:shadow-lg transition-all border-l-4 border-slate-700`}
+    >
       <div className="flex justify-between items-start mb-2">
         <div className="flex-1">
           <h4 className="text-lg font-semibold text-gray-800 mb-1">
@@ -25,21 +29,31 @@ const TaskItem = ({ task }) => {
         </div>
       </div>
 
-      <p className="text-gray-600 text-sm my-3 leading-relaxed">
+      <p className="text-gray-700 text-sm my-3 leading-relaxed">
         {task.description}
       </p>
 
       <div className="flex flex-col items-center gap-3 mt-2 pt-4 border-t border-gray-200">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <span className="px-2 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700">
             {task.priority}
           </span>
-          <span className="text-xs text-gray-500">📅 {formattedDueDate}</span>
+          {task.dueDate && (
+            <span className="text-sm text-gray-700">
+              📅 Due:{" "}
+              {new Date(task.dueDate).toLocaleString([], {
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
+          )}
         </div>
 
         {warning && (
           <div className="flex items-center">
-            <span className="text-sm text-red-500">{warning}</span>
+            <span className="text-md">{warning}</span>
           </div>
         )}
 
@@ -86,22 +100,3 @@ const TaskItem = ({ task }) => {
 };
 
 export default TaskItem;
-
-function getDueWarning(dueDateStr) {
-  if (dueDateStr) {
-    const now = new Date();
-    const dueDate = new Date(dueDateStr);
-    const diffMs = dueDate - now;
-    const diffHours = diffMs / (1000 * 60 * 60);
-
-    if (diffHours <= 0) {
-      return "❌ Task is overdue!";
-    } else if (diffHours <= 1) {
-      return "⚠️ Task is due within an hour!";
-    } else if (diffHours <= 24) {
-      return "⚠️ Task is due within a day!";
-    } else {
-      return ""; // No warning
-    }
-  }
-}

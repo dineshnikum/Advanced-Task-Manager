@@ -1,4 +1,4 @@
-import TaskModel from "../models/taskModel.js";
+import Task from "../models/taskModel.js";
 
 // create task
 export const createTask = async (req, res) => {
@@ -12,13 +12,13 @@ export const createTask = async (req, res) => {
   }
 
   try {
-    const newTask = await TaskModel.create({
+    const newTask = await Task.create({
       title,
       description: description || "No description",
       priority: priority || "medium",
       category: category || "other",
       status: status || "todo",
-      dueDate: dueDate ? new Date(dueDate) : null,
+      dueDate: dueDate ? new Date(dueDate).toISOString() : null,
       user: userId,
     });
 
@@ -40,7 +40,7 @@ export const createTask = async (req, res) => {
 // get tasks
 export const getTasks = async (req, res) => {
   try {
-    const tasks = await TaskModel.find({ user: req.user.userId }).sort({
+    const tasks = await Task.find({ user: req.user.userId }).sort({
       createdAt: -1,
     });
 
@@ -68,7 +68,7 @@ export const getTasks = async (req, res) => {
 // update task
 export const updateTask = async (req, res) => {
   try {
-    const updatedTask = await TaskModel.findByIdAndUpdate(
+    const updatedTask = await Task.findByIdAndUpdate(
       { _id: req.params.id, user: req.user.userId },
       req.body,
       {
@@ -93,7 +93,7 @@ export const updateTask = async (req, res) => {
 // delete task
 export const deleteTask = async (req, res) => {
   try {
-    const deletedTask = await TaskModel.findByIdAndDelete({
+    const deletedTask = await Task.findByIdAndDelete({
       _id: req.params.id,
       user: req.user.userId,
     });
@@ -114,7 +114,7 @@ export const deleteTask = async (req, res) => {
 
 export const getDueSoonTasks = async (req, res) => {
   try {
-    const dueSoonTasks = await TaskModel.find({
+    const dueSoonTasks = await Task.find({
       user: req.user.userId,
       dueDate: { $gt: new Date() },
     }).sort({ dueDate: 1 });

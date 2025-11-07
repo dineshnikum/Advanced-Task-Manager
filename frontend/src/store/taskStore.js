@@ -67,7 +67,7 @@ const useTaskStore = create(
           category: task.category || "other",
           priority: task.priority || "medium",
           createdAt: new Date(),
-          dueDate: task.dueDate ? new Date(task.dueDate) : null,
+          dueDate: task.dueDate ? new Date(task.dueDate).toISOString() : null,
           status: "todo",
         };
 

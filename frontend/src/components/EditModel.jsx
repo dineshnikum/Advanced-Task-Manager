@@ -121,8 +121,9 @@ const EditModel = () => {
             Due Date
           </label>
           <input
-            type="date"
-            value={formData.dueDate ? formData.dueDate.split("T")[0] : ""}
+            type="datetime-local"
+            value={formData.dueDate}
+            step="60"
             onChange={(e) =>
               setFormData({ ...formData, dueDate: e.target.value })
             }
