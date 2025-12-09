@@ -10,36 +10,36 @@ const TaskItem = ({ task }) => {
     openEditModal,
   } = useTaskStore();
 
-  const warning = getDueWarning(task.dueDate);
+  const warning = task.status !== "completed" && getDueWarning(task.dueDate);
 
   return (
     <div
       className={`${getDueColor(
         task
-      )} hover:-translate-y-1 mb-5 rounded-lg p-5 shadow-md hover:shadow-lg transition-all border-l-4 border-slate-700`}
+      )} hover:-translate-y-1 mb-5 rounded-lg p-5 shadow-md hover:shadow-lg transition-all border-l-4 text-slate-900`}
     >
       <div className="flex justify-between items-start mb-2">
         <div className="flex-1">
-          <h4 className="text-lg font-semibold text-gray-800 mb-1">
+          <h4 className="text-lg font-semibold text-slate-900 mb-1">
             {task.title}
           </h4>
-          <span className="inline-block bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs">
+          <span className="inline-block bg-slate-100 text-slate-700 border border-slate-200 px-2 py-1 rounded-full text-xs">
             {task.category}
           </span>
         </div>
       </div>
 
-      <p className="text-gray-700 text-sm my-3 leading-relaxed">
+      <p className="text-slate-700 text-sm my-3 leading-relaxed">
         {task.description}
       </p>
 
       <div className="flex flex-col items-center gap-3 mt-2 pt-4 border-t border-gray-200">
         <div className="flex items-center gap-4">
-          <span className="px-2 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700">
+          <span className="px-2 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
             {task.priority}
           </span>
           {task.dueDate && (
-            <span className="text-sm text-gray-700">
+            <span className="text-sm text-slate-700">
               📅 Due:{" "}
               {new Date(task.dueDate).toLocaleString([], {
                 month: "short",
@@ -53,7 +53,7 @@ const TaskItem = ({ task }) => {
 
         {warning && (
           <div className="flex items-center">
-            <span className="text-md">{warning}</span>
+            <span className="text-sm font-medium text-rose-700">{warning}</span>
           </div>
         )}
 
